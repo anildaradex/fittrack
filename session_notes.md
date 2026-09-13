@@ -11,7 +11,8 @@
 - User unlinked "My First Project" + linked FitTrack to 01BA1E. Enabled run/cloudbuild/artifactregistry/secretmanager/sqladmin; created AR repo `fittrack`; IAM for compute SA (new-project Cloud Build default), legacy CB SA, P4SA secretmanager.admin.
 - First build via `gcloud builds submit` SUCCESS (tests → build → push → deploy, 1m18s). Live: https://fittrack-kveakx2baa-uc.a.run.app — health OK, SPA route 200, screenshot verified.
 - Cloud Build GitHub connection `fittrack-github` created, PENDING_USER_OAUTH. Added `scripts/setup_trigger.sh` for repo link + `deploy-main` trigger once authorized.
-- Carry-forward: user authorizes connection → run setup_trigger.sh → push a trivial commit to prove auto-deploy → Phase 1.
+- User authorized the GitHub connection (COMPLETE). Linked repo; trigger `deploy-main` (^main$, cloudbuild.yaml) created — needed explicit `--service-account` (compute SA) on this new project; script fixed. This commit is the auto-deploy proof.
+- Carry-forward: confirm auto-deploy build succeeded → Phase 1.
 
 ## 2026-09-13 — Project kickoff
 - User asked for a personal MyFitnessPal clone, built incrementally, deployed to their Google Cloud, code on GitHub.

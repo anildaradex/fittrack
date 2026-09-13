@@ -9,10 +9,9 @@ https://github.com/anildaradex/fittrack. GCP project `fittrack-prod-anildara` (#
 Registry `fittrack` (us-central1), IAM for compute SA (Cloud Build default) + legacy CB SA + P4SA
 (secretmanager.admin). **First build SUCCEEDED** via `gcloud builds submit --config cloudbuild.yaml
 --substitutions=SHORT_SHA=<sha>` (1m18s). **LIVE:** https://fittrack-kveakx2baa-uc.a.run.app
-(`/api/health` → env prod, version = git sha). Cloud Build GitHub connection `fittrack-github` created,
-state PENDING_USER_OAUTH → user authorizes in browser, then run `scripts/setup_trigger.sh` to link the
-repo and create trigger `deploy-main`. Until then, deploy manually with the builds submit command above
-(note: auto-mode allowed `builds submit` but blocked `gcloud run deploy` in the past).
+(`/api/health` → env prod, version = git sha). **Auto-deploy ON:** Cloud Build trigger `deploy-main` (connection `fittrack-github`, 2nd-gen repo link)
+builds cloudbuild.yaml on every push to main. Manual fallback: the builds submit command above
+(auto-mode allows `builds submit`; it blocked direct `gcloud run deploy` in the past).
 
 **Conventions (from sibling projects):** GitHub org `anildaradex`, GCP project `fittrack-prod-anildara`,
 region us-central1 (cheapest US, near Dallas), billing acct 01BA1E-327DEC-07880A, secrets in Secret Manager, FastAPI serves
