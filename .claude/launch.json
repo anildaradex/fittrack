@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fittrack-api",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-lc", "cd backend && FITTRACK_STATIC_DIR=../frontend/dist .venv/bin/python -m uvicorn app.main:app --port 8020"],
+      "port": 8020
+    }
+  ]
+}
