@@ -9,6 +9,11 @@ class Settings(BaseSettings):
     env: str = "local"
     version: str = "0.1.0"
     static_dir: str = "static"
+    # SQLite locally (no docker on the dev Mac); Postgres on Cloud Run via Secret Manager.
+    database_url: str = "sqlite:///./fittrack.db"
+    # Single-user bearer token. Prod value lives in Secret Manager (fittrack-app-token).
+    app_token: str = "dev-token"
+    owner_email: str = "anil.dara@gmail.com"
 
 
 settings = Settings()

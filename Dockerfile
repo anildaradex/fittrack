@@ -16,8 +16,11 @@ WORKDIR /app
 COPY backend/pyproject.toml backend/uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 COPY backend/app ./app
+COPY backend/alembic.ini ./alembic.ini
+COPY backend/migrations ./migrations
 COPY --from=web /web/dist ./static
 
 ENV PATH="/app/.venv/bin:$PATH" FITTRACK_ENV=prod FITTRACK_STATIC_DIR=/app/static PORT=8080
 EXPOSE 8080
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Apply migrations, then serve. Single instance in practice, so no migration race.
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]

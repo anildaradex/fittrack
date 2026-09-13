@@ -5,8 +5,12 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
+from app.routers import diary, foods, goals
 
 app = FastAPI(title="FitTrack API", version=settings.version)
+app.include_router(foods.router)
+app.include_router(goals.router)
+app.include_router(diary.router)
 
 
 @app.get("/api/health")

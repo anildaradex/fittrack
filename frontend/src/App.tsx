@@ -1,40 +1,49 @@
 import { useEffect, useState } from 'react'
+import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
+import { getToken } from './api'
+import Login from './pages/Login'
+import Today from './pages/Today'
+import AddFood from './pages/AddFood'
+import Foods from './pages/Foods'
+import FoodForm from './pages/FoodForm'
+import Goals from './pages/Goals'
 
-type Health = { status: string; env: string; version: string }
+function Shell() {
+  const [authed, setAuthed] = useState(() => !!getToken())
+  useEffect(() => {
+    const h = () => setAuthed(!!getToken())
+    window.addEventListener('fittrack:auth', h)
+    window.addEventListener('storage', h)
+    return () => { window.removeEventListener('fittrack:auth', h); window.removeEventListener('storage', h) }
+  }, [])
+  if (!authed) return <Navigate to="/login" replace />
+  return (
+    <>
+      <Outlet />
+      <nav className="tabs">
+        <NavLink to="/" end><span className="ico">📅</span>Today</NavLink>
+        <NavLink to="/foods"><span className="ico">🥗</span>Foods</NavLink>
+        <NavLink to="/goals"><span className="ico">🎯</span>Goals</NavLink>
+      </nav>
+    </>
+  )
+}
 
 export default function App() {
-  const [health, setHealth] = useState<Health | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-      .then(setHealth)
-      .catch((e: Error) => setError(e.message))
-  }, [])
-
   return (
-    <main>
-      <h1>FitTrack</h1>
-      <p className="muted">Personal calorie, macro and weight tracker.</p>
-      <section className="card">
-        <strong>Phase 0 — pipeline check</strong>
-        <p>
-          API:{' '}
-          {health ? (
-            <span className="ok">ok</span>
-          ) : error ? (
-            <span className="err">{error}</span>
-          ) : (
-            <span className="muted">checking…</span>
-          )}
-        </p>
-        {health && (
-          <p className="muted">
-            env <code>{health.env}</code> · version <code>{health.version}</code>
-          </p>
-        )}
-      </section>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route element={<Shell />}>
+          <Route path="/" element={<Today />} />
+          <Route path="/add" element={<AddFood />} />
+          <Route path="/foods" element={<Foods />} />
+          <Route path="/foods/new" element={<FoodForm />} />
+          <Route path="/foods/:id" element={<FoodForm />} />
+          <Route path="/goals" element={<Goals />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }

@@ -3,6 +3,7 @@ substitutions:
   _REGION: us-central1
   _SERVICE: fittrack
   _REPO: fittrack
+  _SQL_INSTANCE: fittrack-db
 options:
   logging: CLOUD_LOGGING_ONLY
   machineType: E2_HIGHCPU_8
@@ -43,6 +44,8 @@ steps:
       - --max-instances=2
       - --memory=512Mi
       - --set-env-vars=FITTRACK_VERSION=${SHORT_SHA}
+      - --add-cloudsql-instances=${PROJECT_ID}:${_REGION}:${_SQL_INSTANCE}
+      - --set-secrets=FITTRACK_DATABASE_URL=database-url:latest,FITTRACK_APP_TOKEN=fittrack-app-token:latest
 
 images:
   - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${SHORT_SHA}
