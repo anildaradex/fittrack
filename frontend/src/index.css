@@ -55,7 +55,7 @@ h2 { font-size: 1.05rem; margin: 0; }
 .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s; }
 .bar > i.over { background: var(--danger); }
 .bar > i.protein { background: var(--protein); } .bar > i.carbs { background: var(--carbs); } .bar > i.fat { background: var(--fat); }
-.macro-line { display: flex; gap: 8px; color: var(--muted); font-size: 0.78rem; }
+.macro-line { display: flex; gap: 8px; color: var(--muted); font-size: 0.72rem; white-space: nowrap; }
 .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 0.75rem; background: var(--bg); border: 1px solid var(--border); }
 .error { color: var(--danger); font-size: 0.85rem; margin-top: 8px; }
 .ok { color: var(--accent); }

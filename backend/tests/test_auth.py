@@ -9,3 +9,9 @@ def test_requires_token(client):
 
 def test_health_is_public(client):
     assert client.get("/api/health").status_code == 200
+
+
+def test_token_with_trailing_newline_in_secret(client, monkeypatch):
+    from app import auth
+    monkeypatch.setattr(auth.settings, "app_token", "test-token\n")
+    assert client.get("/api/foods", headers=AUTH).status_code == 200

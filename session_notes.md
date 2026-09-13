@@ -12,7 +12,15 @@
 - First build via `gcloud builds submit` SUCCESS (tests → build → push → deploy, 1m18s). Live: https://fittrack-kveakx2baa-uc.a.run.app — health OK, SPA route 200, screenshot verified.
 - Cloud Build GitHub connection `fittrack-github` created, PENDING_USER_OAUTH. Added `scripts/setup_trigger.sh` for repo link + `deploy-main` trigger once authorized.
 - User authorized the GitHub connection (COMPLETE). Linked repo; trigger `deploy-main` (^main$, cloudbuild.yaml) created — needed explicit `--service-account` (compute SA) on this new project; script fixed. This commit is the auto-deploy proof.
-- Carry-forward: confirm auto-deploy build succeeded → Phase 1.
+- Auto-deploy proven (331fb07 built by trigger, live).
+
+## 2026-09-13 (evening) — Phase 1: diary MVP
+- Backend: SQLAlchemy 2 models (users, goals, foods, food_servings, diary_entries; nutrition per 100 g), Alembic (render_as_batch for SQLite parity; `alembic upgrade head` in container CMD), bearer-token auth (`FITTRACK_APP_TOKEN`; owner row auto-created), routers foods/goals/diary. 11 pytest tests.
+- Frontend: react-router; Login (token → localStorage), Today (date nav, kcal ring/bars, net-carb mode, 4 meals, tap entry → edit/delete sheet), Add (search + recent, LogSheet with serving × qty), Foods list, FoodForm (enter per-serving, stored per 100 g), Goals (presets, net-carb toggle). Verified in browser desktop + mobile.
+- Bug found in browser test: Shell only re-read token on a logout event → login never advanced. Fixed with a `fittrack:auth` event from setToken.
+- Cloud: Cloud SQL `fittrack-db` (POSTGRES_16, db-f1-micro, HDD 10 GB, us-central1), DB `fittrack`, user `fittrack`; secrets `database-url` (psycopg URL via /cloudsql socket) + `fittrack-app-token`; cloudbuild.yaml deploy adds `--add-cloudsql-instances` + `--set-secrets`. Deploy d0181f1 SUCCESS; alembic ran on Postgres (logs).
+- Prod bug: token secret had trailing newline (openssl | gcloud) → "Invalid token". Fixed by stripping in auth compare (+ test).
+- Carry-forward: user signs in on phone with token (`gcloud secrets versions access latest --secret=fittrack-app-token --project=fittrack-prod-anildara`), then Phase 2 (USDA + Open Food Facts).
 
 ## 2026-09-13 — Project kickoff
 - User asked for a personal MyFitnessPal clone, built incrementally, deployed to their Google Cloud, code on GitHub.

@@ -12,7 +12,8 @@ from app.models import User
 def _check_token(authorization: str | None) -> None:
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Missing bearer token")
-    if authorization.removeprefix("Bearer ").strip() != settings.app_token:
+    # strip(): secrets piped from a shell often carry a trailing newline
+    if authorization.removeprefix("Bearer ").strip() != settings.app_token.strip():
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid token")
 
 
