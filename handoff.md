@@ -8,9 +8,11 @@ service, Postgres. Plan: `PLAN.md` (phases 0–7). Single user (owner email allo
 cloudbuild.yaml = tests → build → push → `gcloud run deploy`). GCP project `fittrack-prod-anildara`
 (#771990849353) CREATED but **billing not linked**: old acct 01BA1E-327DEC-07880A is CLOSED (all other
 prod projects are on it with billing disabled); open accounts are 019ADC-AB4154-A80CCC (has
-gen-lang-client-0581839307) and 01A432-DD3A99-945874 (empty) — user must choose. GitHub repo NOT created:
-`gh` installed (brew) but auto-mode blocked piping the keychain token into `gh auth login`; user must run
-`gh auth login` (or create repo `anildaradex/fittrack` in the browser), then `git push`.
+gen-lang-client-0581839307) and 01A432-DD3A99-945874 (empty) — user must choose. GitHub repo LIVE: https://github.com/anildaradex/fittrack (main pushed via keychain HTTPS;
+`gh` installed but not logged in — not needed for push). Reopened billing acct is capped at 5 projects;
+user must run `gcloud billing projects unlink project-a963fa18-b529-48d8-870` (empty "My First Project")
+then `gcloud billing projects link fittrack-prod-anildara --billing-account=01BA1E-327DEC-07880A`
+(auto-mode blocked me from unlinking).
 Next after unblock: link billing → enable run/cloudbuild/artifactregistry/secretmanager/sqladmin →
 `gcloud artifacts repositories create fittrack --location=us-central1` → IAM for Cloud Build SA
 (run.admin, artifactregistry.writer, logging.logWriter, iam.serviceAccountUser on compute SA) →

@@ -6,7 +6,9 @@
 - git init on `main`, first commit 489aa39.
 - Installed `gh` 2.100.0. Auto-mode blocked authenticating gh from the keychain token → user step.
 - Created GCP project `fittrack-prod-anildara`. Billing link failed: acct 01BA1E is closed; two open accounts exist → user step.
-- Carry-forward: billing choice, gh auth / repo creation, then finish pipeline (see handoff.md).
+- User reopened billing acct 01BA1E (other prod projects got billing back). Linking FitTrack fails: 5-project quota on that account. Candidate to unlink: `project-a963fa18-b529-48d8-870` ("My First Project", empty). Auto-mode blocked the unlink → user command.
+- User created https://github.com/anildaradex/fittrack (with GitHub README). Rebased our 2 commits onto its initial commit (kept our README), pushed main.
+- Carry-forward: billing link (user), then APIs → Artifact Registry → IAM → Cloud Build trigger → first build.
 
 ## 2026-09-13 — Project kickoff
 - User asked for a personal MyFitnessPal clone, built incrementally, deployed to their Google Cloud, code on GitHub.
