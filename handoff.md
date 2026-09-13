@@ -3,20 +3,16 @@
 **What:** personal MyFitnessPal clone (calorie/macro/weight tracker). PWA + FastAPI, one Cloud Run
 service, Postgres. Plan: `PLAN.md` (phases 0–7). Single user (owner email allowlist). Apple Health calories-burned sync is a required feature (Phase 5, iOS Shortcut → /api/health/import).
 
-**Status (2026-09-13, Phase 0 in progress):** scaffold DONE and committed locally (backend FastAPI
-`/api/health` + SPA static serving, tests pass; frontend Vite React shell builds; Dockerfile multi-stage;
-cloudbuild.yaml = tests → build → push → `gcloud run deploy`). GCP project `fittrack-prod-anildara`
-(#771990849353) CREATED but **billing not linked**: old acct 01BA1E-327DEC-07880A is CLOSED (all other
-prod projects are on it with billing disabled); open accounts are 019ADC-AB4154-A80CCC (has
-gen-lang-client-0581839307) and 01A432-DD3A99-945874 (empty) — user must choose. GitHub repo LIVE: https://github.com/anildaradex/fittrack (main pushed via keychain HTTPS;
-`gh` installed but not logged in — not needed for push). Reopened billing acct is capped at 5 projects;
-user must run `gcloud billing projects unlink project-a963fa18-b529-48d8-870` (empty "My First Project")
-then `gcloud billing projects link fittrack-prod-anildara --billing-account=01BA1E-327DEC-07880A`
-(auto-mode blocked me from unlinking).
-Next after unblock: link billing → enable run/cloudbuild/artifactregistry/secretmanager/sqladmin →
-`gcloud artifacts repositories create fittrack --location=us-central1` → IAM for Cloud Build SA
-(run.admin, artifactregistry.writer, logging.logWriter, iam.serviceAccountUser on compute SA) →
-Cloud Build GitHub connection + trigger on main → first build.
+**Status (2026-09-13, Phase 0 nearly done):** scaffold committed + pushed to
+https://github.com/anildaradex/fittrack. GCP project `fittrack-prod-anildara` (#771990849353) billed on
+01BA1E (reopened; "My First Project" unlinked to free the 5-project quota). APIs enabled, Artifact
+Registry `fittrack` (us-central1), IAM for compute SA (Cloud Build default) + legacy CB SA + P4SA
+(secretmanager.admin). **First build SUCCEEDED** via `gcloud builds submit --config cloudbuild.yaml
+--substitutions=SHORT_SHA=<sha>` (1m18s). **LIVE:** https://fittrack-kveakx2baa-uc.a.run.app
+(`/api/health` → env prod, version = git sha). Cloud Build GitHub connection `fittrack-github` created,
+state PENDING_USER_OAUTH → user authorizes in browser, then run `scripts/setup_trigger.sh` to link the
+repo and create trigger `deploy-main`. Until then, deploy manually with the builds submit command above
+(note: auto-mode allowed `builds submit` but blocked `gcloud run deploy` in the past).
 
 **Conventions (from sibling projects):** GitHub org `anildaradex`, GCP project `fittrack-prod-anildara`,
 region us-central1 (cheapest US, near Dallas), billing acct 01BA1E-327DEC-07880A, secrets in Secret Manager, FastAPI serves
